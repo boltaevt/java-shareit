@@ -61,7 +61,7 @@ public class ItemDAOInMemoryImpl implements ItemDAO {
                 .collect(Collectors.toList());
     }
 
-    public List<Item> searchForAvailableItemsByQuery (String query) {
+    public List<Item> searchForAvailableItemsByQuery(String query) {
         return items.values().stream().filter(item -> item.isAvailable() &&
                 (item.getName().toLowerCase().contains(query) || item.getDescription().toLowerCase().contains(query))
         ).collect(Collectors.toList());

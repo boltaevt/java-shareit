@@ -16,7 +16,6 @@ public class InMemoryBookingDAO implements BookingDAO {
         nextId = 1;
     }
 
-
     @Override
     public Booking findById(long id) {
         return bookingStorage.get(id);

@@ -14,9 +14,9 @@ public interface ItemService {
 
     ItemDTO addNewItem(long userId, ItemDTO itemDTO) throws SimpleException;
 
-    ItemDTO updateItem (long itemId, String userId, ItemUpdateDTO itemUpdateDTO);
+    ItemDTO updateItem(long itemId, String userId, ItemUpdateDTO itemUpdateDTO);
 
-    void deleteItemById (long itemId);
+    void deleteItemById(long itemId);
 
     void deleteAllItems();
 

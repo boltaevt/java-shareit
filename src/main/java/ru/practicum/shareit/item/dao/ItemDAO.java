@@ -12,16 +12,16 @@ public interface ItemDAO {
 
     Item addNewItem(Item item);
 
-    Item updateItem (Item item);
+    Item updateItem(Item item);
 
-    void deleteItemById (long itemId);
+    void deleteItemById(long itemId);
 
     boolean checkItemExists(long itemId);
 
     void deleteAllItems();
 
-    List<Item> getUserSpecificItems (String userId);
+    List<Item> getUserSpecificItems(String userId);
 
-    List<Item> searchForAvailableItemsByQuery (String query);
+    List<Item> searchForAvailableItemsByQuery(String query);
 
 }
