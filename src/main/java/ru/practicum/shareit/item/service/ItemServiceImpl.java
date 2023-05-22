@@ -150,7 +150,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDTO> viewUserSpecificItems(String userId) {
-        if (userDAO.checkUserExists(Long.valueOf(userId))) {
+        if (userDAO.checkUserExists(Long.parseLong(userId))) {
             List<Item> items = itemDAO.getUserSpecificItems(userId);
             return items.stream().map(ItemMapper::itemToDTO).collect(Collectors.toList());
         } else {
