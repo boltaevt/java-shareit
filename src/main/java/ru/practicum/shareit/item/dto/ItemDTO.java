@@ -1,4 +1,5 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.dto;
+
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,7 +7,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 
 @Data
 @NoArgsConstructor
-public class Item {
+public class ItemDTO {
     private long id;
     private String name;
     private String description;
@@ -14,7 +15,7 @@ public class Item {
     private String owner;
     private ItemRequest request;
 
-    public Item(long id, String name, String description, boolean available, String owner, ItemRequest request) {
+    public ItemDTO(long id, String name, String description, boolean available, String owner, ItemRequest request) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -22,5 +23,5 @@ public class Item {
         this.owner = owner;
         this.request = request;
     }
-
 }
+
