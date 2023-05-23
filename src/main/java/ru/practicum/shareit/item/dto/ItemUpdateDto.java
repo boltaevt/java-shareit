@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ItemUpdateDTO {
+public class ItemUpdateDto {
     private String name;
     private String description;
     private Boolean available;
 
-    public ItemUpdateDTO(String name, String description, Boolean available) {
+    public ItemUpdateDto(String name, String description, Boolean available) {
         this.name = name;
         this.description = description;
         this.available = available;

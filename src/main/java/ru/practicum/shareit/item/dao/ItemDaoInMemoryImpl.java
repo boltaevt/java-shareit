@@ -7,9 +7,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class ItemDAOInMemoryImpl implements ItemDAO {
+public class ItemDaoInMemoryImpl implements ItemDao {
 
-    Map<Long, Item> items = new HashMap<>();
+    private Map<Long, Item> items = new HashMap<>();
     private long itemId = 1;
 
     @Override

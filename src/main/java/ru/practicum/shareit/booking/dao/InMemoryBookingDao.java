@@ -7,13 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryBookingDAO implements BookingDAO {
-    private final Map<Long, Booking> bookingStorage;
-    private long nextId;
+public class InMemoryBookingDao implements BookingDao {
+    private final Map<Long, Booking> bookingStorage = new HashMap<>();
+    private long nextId = 1;
 
-    public InMemoryBookingDAO() {
-        bookingStorage = new HashMap<>();
-        nextId = 1;
+    public InMemoryBookingDao() {
     }
 
     @Override

@@ -9,14 +9,12 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
-public class UserDTO {
+public class UserDto {
     private long id;
     private String name;
     @Email
     @NotNull
     @NotBlank
     private String email;
-
-    // Constructors, getters, and setters
-
+    
 }

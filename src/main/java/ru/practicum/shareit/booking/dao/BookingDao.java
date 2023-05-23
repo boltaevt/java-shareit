@@ -4,7 +4,7 @@ import ru.practicum.shareit.booking.model.Booking;
 
 import java.util.List;
 
-public interface BookingDAO {
+public interface BookingDao {
 
     Booking findById(long id);
 

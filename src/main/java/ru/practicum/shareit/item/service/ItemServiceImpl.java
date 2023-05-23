@@ -2,15 +2,15 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.error.exceptions.ObjectNotFoundException;
+import ru.practicum.shareit.error.exceptions.EntityNotFoundException;
 import ru.practicum.shareit.error.exceptions.SimpleException;
-import ru.practicum.shareit.item.dao.ItemDAO;
-import ru.practicum.shareit.item.dto.ItemDTO;
-import ru.practicum.shareit.item.dto.ItemUpdateDTO;
+import ru.practicum.shareit.item.dao.ItemDao;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.mapper.ItemUpdateMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.dao.UserDAO;
+import ru.practicum.shareit.user.dao.UserDao;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,17 +18,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-    private final ItemDAO itemDAO;
-    private final UserDAO userDAO;
+    private final ItemDao itemDAO;
+    private final UserDao userDAO;
 
     @Autowired
-    public ItemServiceImpl(ItemDAO itemDAO, UserDAO userDAO) {
+    public ItemServiceImpl(ItemDao itemDAO, UserDao userDAO) {
         this.itemDAO = itemDAO;
         this.userDAO = userDAO;
     }
 
     @Override
-    public ItemDTO getItemById(long itemId) {
+    public ItemDto getItemById(long itemId) {
         if (itemDAO.checkItemExists(itemId)) {
             return ItemMapper.itemToDTO(itemDAO.getItemById(itemId));
         } else {
@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDTO> getAllItems() {
+    public List<ItemDto> getAllItems() {
         List<Item> items = itemDAO.getAllItems();
         return items.stream()
                 .map(ItemMapper::itemToDTO)
@@ -45,13 +45,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDTO addNewItem(long userId, ItemDTO itemDTO) throws SimpleException {
+    public ItemDto addNewItem(long userId, ItemDto itemDTO) throws SimpleException {
         checkItemDTO(userId, itemDTO);
         return ItemMapper.itemToDTO(itemDAO.addNewItem(ItemMapper.toItem(userId, itemDTO)));
     }
 
     @Override
-    public ItemDTO updateItem(long itemId, String userId, ItemUpdateDTO itemUpdateDTO) {
+    public ItemDto updateItem(long itemId, String userId, ItemUpdateDto itemUpdateDTO) {
         long userNo = Long.parseLong(userId);
         checkUser(userNo);
         if (itemDAO.checkItemExists(itemId) && checkItemBelongsTOUser(userNo, itemDAO.getItemById(itemId))) {
@@ -59,7 +59,7 @@ public class ItemServiceImpl implements ItemService {
             return ItemMapper.itemToDTO(itemDAO.updateItem(checkAndUpdateAvailability(checkAndUpdateItemDescription(checkAndUpdateItemName(item, itemUpdateDTO),
                     itemUpdateDTO), itemUpdateDTO)));
         } else {
-            throw new ObjectNotFoundException("Item not found");
+            throw new EntityNotFoundException("Item not found");
         }
     }
 
@@ -73,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
         itemDAO.deleteAllItems();
     }
 
-    public List<ItemUpdateDTO> viewUserItems(long userId) {
+    public List<ItemUpdateDto> viewUserItems(long userId) {
         String userName = userDAO.getUserById(userId).getName();
         List<Item> userItems = itemDAO.getAllItems().stream()
                 .filter(item -> item.getOwner().equals(userName))
@@ -81,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
         return userItems.stream().map(ItemUpdateMapper::itemToViewDTO).collect(Collectors.toList());
     }
 
-    public List<ItemDTO> searchAvailableItems(String query, String userId) {
+    public List<ItemDto> searchAvailableItems(String query, String userId) {
         if (userDAO.checkUserExists(Long.parseLong(userId))) {
             if (query.isEmpty()) {
                 return Collections.emptyList();
@@ -91,11 +91,11 @@ public class ItemServiceImpl implements ItemService {
                 return relevantItems.stream().map(ItemMapper::itemToDTO).collect(Collectors.toList());
             }
         } else {
-            throw new ObjectNotFoundException("User does not exist");
+            throw new EntityNotFoundException("User does not exist");
         }
     }
 
-    private boolean checkItemDTO(long userId, ItemDTO itemDTO) throws SimpleException, ObjectNotFoundException {
+    private boolean checkItemDTO(long userId, ItemDto itemDTO) throws SimpleException, EntityNotFoundException {
         checkUser(userId);
         if (!itemDTO.isAvailable()) {
             throw new SimpleException("Indicate availability");
@@ -111,13 +111,13 @@ public class ItemServiceImpl implements ItemService {
 
     private boolean checkUser(long userId) {
         if (!userDAO.checkUserExists(userId)) {
-            throw new ObjectNotFoundException("User does not exist");
+            throw new EntityNotFoundException("User does not exist");
         } else {
             return true;
         }
     }
 
-    private Item checkAndUpdateItemName(Item item, ItemUpdateDTO itemDTO) {
+    private Item checkAndUpdateItemName(Item item, ItemUpdateDto itemDTO) {
         String dtoName = itemDTO.getName();
         if ((dtoName != null) && (!dtoName.isBlank() && (!dtoName.equals(item.getName())))) {
             item.setName(dtoName);
@@ -125,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
 
-    private Item checkAndUpdateItemDescription(Item item, ItemUpdateDTO itemDTO) {
+    private Item checkAndUpdateItemDescription(Item item, ItemUpdateDto itemDTO) {
         String dtoDescription = itemDTO.getDescription();
         if ((dtoDescription != null) && (!dtoDescription.isBlank()) && (!dtoDescription.equals(item.getDescription()))) {
             item.setDescription(dtoDescription);
@@ -133,7 +133,7 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
 
-    private Item checkAndUpdateAvailability(Item item, ItemUpdateDTO itemDTO) {
+    private Item checkAndUpdateAvailability(Item item, ItemUpdateDto itemDTO) {
         if (itemDTO.getAvailable() != null) {
             item.setAvailable(itemDTO.getAvailable());
         }
@@ -143,18 +143,18 @@ public class ItemServiceImpl implements ItemService {
     private boolean checkItemBelongsTOUser(long userId, Item item) {
         long dtoOwnerId = Long.parseLong(item.getOwner());
         if (dtoOwnerId != userId) {
-            throw new ObjectNotFoundException("Wrong user");
+            throw new EntityNotFoundException("Wrong user");
         }
         return true;
     }
 
     @Override
-    public List<ItemDTO> viewUserSpecificItems(String userId) {
+    public List<ItemDto> viewUserSpecificItems(String userId) {
         if (userDAO.checkUserExists(Long.parseLong(userId))) {
             List<Item> items = itemDAO.getUserSpecificItems(userId);
             return items.stream().map(ItemMapper::itemToDTO).collect(Collectors.toList());
         } else {
-            throw new ObjectNotFoundException("User indicated does not exist");
+            throw new EntityNotFoundException("User indicated does not exist");
         }
     }
 }

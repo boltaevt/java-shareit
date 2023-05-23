@@ -5,7 +5,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.error.exceptions.ObjectNotFoundException;
+import ru.practicum.shareit.error.exceptions.EntityNotFoundException;
 import ru.practicum.shareit.error.exceptions.SimpleException;
 import ru.practicum.shareit.error.exceptions.ValidationException;
 
@@ -23,7 +23,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleObjectNotFound(final ObjectNotFoundException e) {
+    public ErrorResponse handleObjectNotFound(final EntityNotFoundException e) {
         return new ErrorResponse(
                 "NOT_FOUND",
                 e.getMessage()

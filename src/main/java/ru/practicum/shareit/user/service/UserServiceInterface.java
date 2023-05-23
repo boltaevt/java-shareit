@@ -1,24 +1,24 @@
 package ru.practicum.shareit.user.service;
 
 import ru.practicum.shareit.error.exceptions.ValidationException;
-import ru.practicum.shareit.user.dto.UserDTO;
-import ru.practicum.shareit.user.dto.UserUpdateDTO;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserUpdateDto;
 
 import java.util.List;
 
 public interface UserServiceInterface {
 
-    UserDTO createUser(UserDTO userDTO) throws ValidationException;
+    UserDto createUser(UserDto userDTO) throws ValidationException;
 
-    UserDTO updateUser(long userId, UserUpdateDTO userUpdateDTO) throws ValidationException;
+    UserDto updateUser(long userId, UserUpdateDto userUpdateDTO) throws ValidationException;
 
-    UserDTO getUserById(long userId);
+    UserDto getUserById(long userId);
 
     void deleteUserById(long userId);
 
     void deleteAllUsers();
 
-    List<UserDTO> getAllUsers();
+    List<UserDto> getAllUsers();
 
     boolean checkUserExists(long userId);
 

@@ -5,7 +5,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
-public interface UserDAO {
+public interface UserDao {
 
     User createUser(User user) throws ValidationException;
 

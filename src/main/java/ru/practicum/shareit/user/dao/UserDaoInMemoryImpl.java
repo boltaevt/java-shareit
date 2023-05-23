@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class UserDAOInMemoryImpl implements UserDAO {
+public class UserDaoInMemoryImpl implements UserDao {
 
     private final Map<Long, User> users = new HashMap<>();
     private long userIdTracker = 1;
