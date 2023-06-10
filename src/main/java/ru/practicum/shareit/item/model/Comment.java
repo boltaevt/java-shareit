@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.model;
+package ru.practicum.shareit.item.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,27 +8,35 @@ import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "REQUESTS")
+@Table(name = "COMMENTS")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ItemRequest {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "DESCRIPTION")
-    private String description;
+    @Column(name = "TEXT")
+    @NotNull
+    @NotBlank
+    private String text;
 
-    @ManyToOne
-    @JoinColumn(name = "REQUESTOR_ID")
-    private User requestor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "AUTHOR_ID")
+    private User author;
 
-    @CreationTimestamp
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
+
     @Column(name = "CREATED")
+    @CreationTimestamp
     private LocalDateTime created;
 }

@@ -1,51 +1,45 @@
 package ru.practicum.shareit.user.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.error.exceptions.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserUpdateDto;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.validation.ValidationGroups;
 
-import javax.validation.Valid;
-import java.util.List;
+import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/users")
-@Slf4j
 public class UserController {
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody UserDto userDTO) throws ru.practicum.shareit.error.exceptions.ValidationException {
-            return userService.createUser(userDTO);
+    public UserDto create(@Validated(ValidationGroups.Create.class) @RequestBody UserDto userDto) {
+        return userService.createUser(userDto);
     }
 
-    @PatchMapping ("/{userId}")
-    public UserDto updateUser(@PathVariable("userId") long userId, @Valid @RequestBody UserUpdateDto userUpdateDTODTO)
-            throws ValidationException {
-        return userService.updateUser(userId, userUpdateDTODTO);
-    }
-
-    @GetMapping ("/{userId}")
-    public UserDto getUserById(@PathVariable long userId) {
-        return userService.getUserById(userId);
+    @GetMapping("/{userId}")
+    public UserDto get(@PathVariable Long userId) {
+        return userService.getUser(userId);
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
+    public Collection<UserDto> getAll() {
         return userService.getAllUsers();
     }
 
-    @DeleteMapping ("/{userId}")
-    public void deleteUserById(@PathVariable long userId) {
-        userService.deleteUserById(userId);
+    @PatchMapping("/{userId}")
+    public UserDto update(@PathVariable Long userId,
+                              @Validated(ValidationGroups.Update.class) @RequestBody UserDto userDto) {
+        return userService.updateUser(userId, userDto);
     }
 
+    @DeleteMapping("/{userId}")
+    public UserDto delete(@PathVariable Long userId) {
+        return userService.deleteUser(userId);
+    }
 }

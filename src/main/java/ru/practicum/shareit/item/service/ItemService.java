@@ -1,26 +1,20 @@
 package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.error.exceptions.SimpleException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface ItemService {
+    ItemDto createItem(ItemDto itemDto, Long userId);
 
-    ItemDto getItemById(long itemId);
+    ItemDto changeItem(Long itemId, ItemDto itemDto, Long userId);
 
-    List<ItemDto> getAllItems();
+    ItemDto getItem(Long itemId, Long userId);
 
-    ItemDto addNewItem(long userId, ItemDto itemDTO) throws SimpleException;
+    Collection<ItemDto> getAllItems(Long userId, Long from, Long size);
 
-    ItemDto updateItem(long itemId, String userId, ItemUpdateDto itemUpdateDTO);
+    Collection<ItemDto> searchItems(String text, Long from, Long size);
 
-    void deleteItemById(long itemId);
-
-    void deleteAllItems();
-
-    List<ItemDto> viewUserSpecificItems(String userId);
-
-    List<ItemDto> searchAvailableItems(String text, String userId);
-    }
+    CommentDto addComment(Long itemId, CommentDto commentDto, Long userId);
+}

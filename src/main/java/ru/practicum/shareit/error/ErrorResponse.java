@@ -1,19 +1,13 @@
 package ru.practicum.shareit.error;
 
 public class ErrorResponse {
-    private final String errorCode;
-    private final String errorMessage;
+    private final String error;
 
-    public ErrorResponse(String errorCode, String errorMessage) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
+    public ErrorResponse(String error) {
+        this.error = error;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getError() {
+        return error;
     }
 }

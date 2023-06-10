@@ -1,48 +1,65 @@
 package ru.practicum.shareit.error;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.error.exceptions.EntityNotFoundException;
-import ru.practicum.shareit.error.exceptions.SimpleException;
-import ru.practicum.shareit.error.exceptions.ValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class ErrorHandler {
+    private final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleIncorrectParameterException(final ValidationException e) {
-        return new ErrorResponse(
-                "VALIDATION_FAILED",
-                e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
+    @ExceptionHandler({
+            ItemNotFoundException.class,
+            UserNotFoundException.class,
+            AccessDeniedException.class,
+            BookingNotFoundException.class,
+            ItemRequestNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleObjectNotFound(final EntityNotFoundException e) {
-        return new ErrorResponse(
-                "NOT_FOUND",
-                e.getMessage()
-        );
+    public ErrorResponse itemNotFound(final RuntimeException e) {
+        logger.info("item not found: {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler(SimpleException.class)
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleSimpleException(SimpleException ex) {
-        return new ErrorResponse(
-                "CONSTRAINT_VIOLATION",
-                ex.getMessage()
-        );
+    public ErrorResponse validationError(final MethodArgumentNotValidException e) {
+        logger.info("validation failed: {}", e.getMessage(), e);
+        return new ErrorResponse(e.getBindingResult().getFieldErrors().stream()
+                .map(FieldError::getField)
+                .collect(Collectors.toList())
+                .toString());
     }
 
-    @ExceptionHandler(MissingRequestHeaderException.class)
+    @ExceptionHandler({ItemNotAvailableException.class, BookingStatusChangeDeniedException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMissingHeaderError(MissingRequestHeaderException ex) {
-        return new ErrorResponse("MissingRequestHeader", ex.getMessage());
+    public ErrorResponse itemUnavailableError(final RuntimeException e) {
+        logger.info("item unavailable error: {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
     }
 
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse conversionError(final MethodArgumentTypeMismatchException e) {
+        logger.info("conversion error: {}", e.getMessage(), e);
+        return new ErrorResponse("Unknown state: " + Objects.requireNonNull(e.getValue()));
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse internalError(final Throwable t) {
+        logger.info("internal error: {}", t.getMessage(), t);
+        return new ErrorResponse(t.getMessage());
+    }
 }
