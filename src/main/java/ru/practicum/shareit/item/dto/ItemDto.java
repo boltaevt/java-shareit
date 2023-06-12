@@ -1,27 +1,39 @@
 package ru.practicum.shareit.item.dto;
 
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
+import ru.practicum.shareit.validation.FieldUpdateConstraint;
+import ru.practicum.shareit.validation.ValidationGroups;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ItemDto {
-    private long id;
-    private String name;
-    private String description;
-    private boolean available;
-    private String owner;
-    private ItemRequest request;
+    private final Long id;
 
-    public ItemDto(long id, String name, String description, boolean available, String owner, ItemRequest request) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-        this.owner = owner;
-        this.request = request;
-    }
+    @NotNull(groups = ValidationGroups.Create.class)
+    @NotBlank(groups = ValidationGroups.Create.class)
+    @FieldUpdateConstraint(groups = ValidationGroups.Update.class)
+    private final String name;
+
+    @NotNull(groups = ValidationGroups.Create.class)
+    @NotBlank(groups = ValidationGroups.Create.class)
+    @FieldUpdateConstraint(groups = ValidationGroups.Update.class)
+    private final String description;
+
+    @NotNull(groups = ValidationGroups.Create.class)
+    private final Boolean available;
+
+    private final BookingShortDto lastBooking;
+    private final BookingShortDto nextBooking;
+
+    private Long requestId;
+
+    private final Collection<CommentDto> comments;
 }
-

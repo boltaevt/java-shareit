@@ -1,25 +1,32 @@
 package ru.practicum.shareit.request.model;
 
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Entity
+@Table(name = "REQUESTS")
+@Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ItemRequest {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "DESCRIPTION")
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "REQUESTOR_ID")
     private User requestor;
+
+    @CreationTimestamp
+    @Column(name = "CREATED")
     private LocalDateTime created;
-
-    public ItemRequest(long id, String description, User requestor, LocalDateTime created) {
-        this.id = id;
-        this.description = description;
-        this.requestor = requestor;
-        this.created = created;
-    }
-
 }
