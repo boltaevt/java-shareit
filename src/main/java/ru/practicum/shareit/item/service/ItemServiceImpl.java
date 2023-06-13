@@ -72,8 +72,8 @@ public class ItemServiceImpl implements ItemService {
             Optional<ItemRequest> optionalItemRequest = itemRequestRepository.findById(requestId);
             optionalItemRequest.ifPresent(item::setRequest);
         }
-
-        Item createdItem = itemRepository.save(item);
+        Item createdItem = item;
+        itemRepository.save(item);
         logger.info("Создана вещь с id={}", createdItem.getId());
 
         return ItemMapper.toItemDto(createdItem);

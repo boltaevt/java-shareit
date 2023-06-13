@@ -48,6 +48,12 @@ class UserServiceImplTest {
     }
 
     @Test
+    void createUser() {
+        UserDto userDto = UserMapper.toUserDto(users.get(0));
+        assertEquals(users.get(0).getId(), userDto.getId());
+    }
+
+    @Test
     void getUser() {
         UserNotFoundException userNotFoundException = Assertions.assertThrows(
                 UserNotFoundException.class,

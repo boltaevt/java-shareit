@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.service.impl;
+package ru.practicum.shareit.request.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,9 +9,10 @@ import ru.practicum.shareit.error.UserNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
-import ru.practicum.shareit.request.service.ItemRequestService;
+import ru.practicum.shareit.request.service.impl.ItemRequestServiceImpl;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -109,6 +110,15 @@ class ItemRequestServiceImplTest {
                 itemRequestRepository,
                 userRepository,
                 itemRepository);
+    }
+
+    @Test
+    void addItemRequest() {
+        UserNotFoundException userNotFoundException = Assertions.assertThrows(
+                UserNotFoundException.class,
+                () -> itemRequestService.addItemRequest(ItemRequestMapper.toItemRequestDto(requests.get(0)), 4L));
+
+        assertEquals("Пользователь 4 не найден", userNotFoundException.getMessage());
     }
 
     @Test

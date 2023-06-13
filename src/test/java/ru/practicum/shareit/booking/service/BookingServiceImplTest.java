@@ -205,11 +205,11 @@ class BookingServiceImplTest {
 
         assertEquals("Вещь 4 не найдена", itemNotFoundException.getMessage());
 
-        ItemNotAvailableException itemUnavailableException = Assertions.assertThrows(
+        ItemNotAvailableException itemNotAvailableException = Assertions.assertThrows(
                 ItemNotAvailableException.class,
                 () -> bookingService.createBooking(shortBookingsDto.get(3), 2L));
 
-        assertEquals("Вещь 2 недоступна", itemUnavailableException.getMessage());
+        assertEquals("Вещь 2 недоступна", itemNotAvailableException.getMessage());
 
         BookingDto savedBookingDto = bookingService.createBooking(shortBookingsDto.get(0), 2L);
         assertEquals(bookings.get(0).getId(), savedBookingDto.getId());
@@ -241,11 +241,11 @@ class BookingServiceImplTest {
 
         assertEquals("Бронирование 4 не найдено", bookingNotFoundException.getMessage());
 
-        AccessDeniedException userAccessDeniedException = Assertions.assertThrows(
+        AccessDeniedException accessDeniedException = Assertions.assertThrows(
                 AccessDeniedException.class,
                 () -> bookingService.getBooking(shortBookingsDto.get(0).getId(), 2L));
 
-        assertEquals("Пользователь 2 не является ни арендатором ни владельцем", userAccessDeniedException.getMessage());
+        assertEquals("Пользователь 2 не является ни арендатором ни владельцем", accessDeniedException.getMessage());
 
         BookingDto savedBookingDto = bookingService.getBooking(shortBookingsDto.get(0).getId(), 1L);
         assertEquals(bookings.get(0).getId(), savedBookingDto.getId());
