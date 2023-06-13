@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,5 +45,23 @@ public class ItemRequestMapperTest {
         Assertions.assertEquals(itemRequest.getDescription(), itemRequestDto.getDescription());
         Assertions.assertEquals(itemRequest.getCreated(), itemRequestDto.getCreated());
         Assertions.assertEquals(items, itemRequestDto.getItems());
+    }
+
+    @Test
+    public void testToItemRequest() {
+        ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "Test Description", LocalDateTime.now(), null);
+
+        User requestor = User.builder()
+                .id(1L)
+                .name("John Doe")
+                .email("johndoe@example.com")
+                .build();
+
+        ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestDto, requestor);
+
+        Assertions.assertEquals(itemRequestDto.getId(), itemRequest.getId());
+        Assertions.assertEquals(itemRequestDto.getDescription(), itemRequest.getDescription());
+        Assertions.assertEquals(requestor, itemRequest.getRequestor());
+        Assertions.assertEquals(itemRequestDto.getCreated(), itemRequest.getCreated());
     }
 }
