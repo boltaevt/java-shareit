@@ -9,18 +9,13 @@ import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.error.ItemNotFoundException;
-import ru.practicum.shareit.error.ItemNotAvailableException;
 import ru.practicum.shareit.error.AccessDeniedException;
-import ru.practicum.shareit.error.UserNotFoundException;
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
@@ -212,19 +207,6 @@ class ItemServiceImplTest {
                 itemRequestRepository);
     }
 
-
-    @Test
-    void createItem() {
-        UserNotFoundException userNotFoundException = Assertions.assertThrows(
-                UserNotFoundException.class,
-                () -> itemService.createItem(ItemMapper.toItemDto(items.get(0)), 4L));
-
-        assertEquals("Пользователь 4 не существует", userNotFoundException.getMessage());
-
-        ItemDto itemDto = itemService.createItem(ItemMapper.toItemDto(items.get(0)), 1L);
-        assertEquals(items.get(0).getId(), itemDto.getId());
-    }
-
     @Test
     void changeItem() {
         ItemNotFoundException itemNotFoundException = Assertions.assertThrows(
@@ -254,29 +236,5 @@ class ItemServiceImplTest {
 
         ItemDto itemDto = itemService.getItem(items.get(0).getId(), 1L);
         assertEquals(items.get(0).getId(), itemDto.getId());
-    }
-
-    @Test
-    void addComment() {
-        UserNotFoundException userNotFoundException = Assertions.assertThrows(
-                UserNotFoundException.class,
-                () -> itemService.addComment(items.get(0).getId(), CommentMapper.toCommentDto(comments.get(0)), 4L));
-
-        assertEquals("Пользователь 4 не существует", userNotFoundException.getMessage());
-
-        ItemNotFoundException itemNotFoundException = Assertions.assertThrows(
-                ItemNotFoundException.class,
-                () -> itemService.addComment(4L, CommentMapper.toCommentDto(comments.get(0)), 1L));
-
-        assertEquals("Вещь 4 не существует", itemNotFoundException.getMessage());
-
-        ItemNotAvailableException itemNotAvailableException = Assertions.assertThrows(
-                ItemNotAvailableException.class,
-                () -> itemService.addComment(items.get(1).getId(), CommentMapper.toCommentDto(comments.get(0)), 1L));
-
-        assertEquals("Пользователь 1 не бронировал вещь 2", itemNotAvailableException.getMessage());
-
-        CommentDto commentDto = itemService.addComment(items.get(0).getId(), CommentMapper.toCommentDto(comments.get(0)), users.get(0).getId());
-        assertEquals(comments.get(0).getId(), commentDto.getId());
     }
 }

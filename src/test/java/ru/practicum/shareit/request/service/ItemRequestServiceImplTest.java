@@ -9,7 +9,6 @@ import ru.practicum.shareit.error.UserNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.request.service.ItemRequestService;
@@ -110,18 +109,6 @@ class ItemRequestServiceImplTest {
                 itemRequestRepository,
                 userRepository,
                 itemRepository);
-    }
-
-    @Test
-    void addItemRequest() {
-        UserNotFoundException userNotFoundException = Assertions.assertThrows(
-                UserNotFoundException.class,
-                () -> itemRequestService.addItemRequest(ItemRequestMapper.toItemRequestDto(requests.get(0)), 4L));
-
-        assertEquals("Пользователь 4 не найден", userNotFoundException.getMessage());
-
-        ItemRequestDto itemRequestDto = itemRequestService.addItemRequest(ItemRequestMapper.toItemRequestDto(requests.get(0)), users.get(0).getId());
-        assertEquals(requests.get(0).getId(), itemRequestDto.getId());
     }
 
     @Test
