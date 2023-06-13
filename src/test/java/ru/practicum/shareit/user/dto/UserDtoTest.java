@@ -20,17 +20,14 @@ public class UserDtoTest {
 
     @Test
     public void testValidUserDto() {
-        // Arrange
         UserDto userDto = UserDto.builder()
                 .id(1L)
                 .name("John Doe")
                 .email("johndoe@example.com")
                 .build();
 
-        // Act
         Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
 
-        // Assert
         assertTrue(violations.isEmpty());
     }
 }
