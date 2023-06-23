@@ -41,9 +41,13 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto addItemRequest(ItemRequestDto itemRequestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь " + userId + " не найден"));
+        Optional<User> optionalUser = userRepository.findById(userId);
 
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFoundException("Пользователь " + userId + " не найден");
+        }
+
+        User user = optionalUser.get();
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestDto, user);
         ItemRequest savedItemRequest = itemRequestRepository.save(itemRequest);
 
@@ -51,7 +55,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         return ItemRequestMapper.toItemRequestDto(savedItemRequest);
     }
-
 
     @Override
     public Collection<ItemRequestDto> getItemRequests(Long userId) {

@@ -1,6 +1,9 @@
 package ru.practicum.shareit.request.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.user.model.User;
 
@@ -9,8 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "REQUESTS")
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
